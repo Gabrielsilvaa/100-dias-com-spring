@@ -31,12 +31,4 @@ public class Cursos {
     @Column
     private Long nota;
 
-    @ManyToOne
-    private Alunos alunos;
-
-    //muitos para um
-    //um para todos
-    //um para um
-    //muitos para muitos
-
 }

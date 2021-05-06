@@ -1,15 +1,13 @@
 package com.gabriel.restAPI.dto;
 
 import com.gabriel.restAPI.model.Alunos;
+import com.gabriel.restAPI.model.Cursos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.domain.Page;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,13 +18,12 @@ public class AlunosDto {
 
     private Long id;
     private String usuario;
-
-
     private String cpf;
     private String email;
     private String nome;
     private String sobreNome;
     private Integer idade;
+    private Cursos cursos;
 
     public AlunosDto(Alunos alunos) {
         this.id = alunos.getId();
@@ -36,10 +33,11 @@ public class AlunosDto {
         this.sobreNome = alunos.getSobreNome();
         this.idade = alunos.getIdade();
         this.cpf = alunos.getCpf();
+        this.cursos = alunos.getCursos();
     }
 
-    public static  List<AlunosDto> convert(List<Alunos> alunos){
-        return alunos.stream().map(AlunosDto::new).collect(Collectors.toList());
+    public static Page<AlunosDto> convert(Page<Alunos> alunos){
+        return alunos.map(AlunosDto::new);
     }
 
 }

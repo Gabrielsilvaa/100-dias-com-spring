@@ -4,12 +4,16 @@ import com.gabriel.restAPI.dto.AlunosDto;
 import com.gabriel.restAPI.model.Alunos;
 import com.gabriel.restAPI.repository.AlunosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/alunos")
@@ -19,11 +23,23 @@ public class AlunosController {
     private AlunosRepository alunosRepository;
 
     @GetMapping
-    public List<AlunosDto> listaAlunos(){
-        List<Alunos> alunos = alunosRepository.findAll();
+    public Page<AlunosDto> listaAlunos(@RequestParam(required = false) String aluno,
+                                       @RequestParam int pagina,
+                                       @RequestParam int qtd){
+
+        Pageable pagainacao = PageRequest.of(pagina, qtd);
+        Page<Alunos> alunos = alunosRepository.findAll(pagainacao);
         return AlunosDto.convert(alunos);
     }
 
+    @GetMapping("/{alunoId}")
+    public ResponseEntity<AlunosDto> buscarPorId(@PathVariable Long alunoId){
+        Optional<Alunos> alunos = alunosRepository.findById(alunoId);
+        if (alunos.isPresent()){
+            return  ResponseEntity.ok(new AlunosDto(alunos.get()));
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

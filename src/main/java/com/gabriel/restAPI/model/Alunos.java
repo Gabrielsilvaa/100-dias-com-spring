@@ -1,7 +1,9 @@
 package com.gabriel.restAPI.model;
 
 import javassist.tools.rmi.ObjectNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -14,6 +16,8 @@ import java.util.Optional;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Alunos {
 
     @Id
@@ -41,4 +45,6 @@ public class Alunos {
     @Column @NotNull @NotEmpty @CPF
     private String cpf;
 
+    @ManyToOne
+    private Cursos cursos;
 }
