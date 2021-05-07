@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +26,9 @@ public class AlunosController {
 
     @GetMapping
     public Page<AlunosDto> listaAlunos(@RequestParam(required = false) String aluno,
-                                       @RequestParam int pagina,
-                                       @RequestParam int qtd){
+                                       @PageableDefault(sort = "id", direction = Sort.Direction.DESC)
+                                               Pageable pagainacao){
 
-        Pageable pagainacao = PageRequest.of(pagina, qtd);
         Page<Alunos> alunos = alunosRepository.findAll(pagainacao);
         return AlunosDto.convert(alunos);
     }
