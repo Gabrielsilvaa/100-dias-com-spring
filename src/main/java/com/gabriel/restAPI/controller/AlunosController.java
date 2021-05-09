@@ -4,6 +4,7 @@ import com.gabriel.restAPI.dto.AlunosDto;
 import com.gabriel.restAPI.model.Alunos;
 import com.gabriel.restAPI.repository.AlunosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class AlunosController {
     private AlunosRepository alunosRepository;
 
     @GetMapping
+    @Cacheable(value = "listaAlunos")
     public Page<AlunosDto> listaAlunos(@RequestParam(required = false) String aluno,
                                        @PageableDefault(sort = "id", direction = Sort.Direction.DESC)
                                                Pageable pagainacao){
