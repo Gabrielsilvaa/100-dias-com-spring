@@ -4,6 +4,7 @@ import com.gabriel.restAPI.dto.AlunosDto;
 import com.gabriel.restAPI.model.Alunos;
 import com.gabriel.restAPI.repository.AlunosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +27,7 @@ public class AlunosController {
     private AlunosRepository alunosRepository;
 
     @GetMapping
-    @Cacheable(value = "listaAlunos")
+    @Cacheable(value = "listaAlunos", sync = false)
     public Page<AlunosDto> listaAlunos(@RequestParam(required = false) String aluno,
                                        @PageableDefault(sort = "id", direction = Sort.Direction.DESC)
                                                Pageable pagainacao){
@@ -46,11 +47,13 @@ public class AlunosController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(value = "listaAlunos", allEntries = true)
     public Alunos add(@Valid @RequestBody Alunos alunos){
         return alunosRepository.save(alunos);
     }
 
     @PutMapping("/{alunoId}")
+    @CacheEvict(value = "listaAlunos", allEntries = true)
     public ResponseEntity<Alunos> update(@PathVariable Long alunoId, @RequestBody Alunos alunos){
 
         if(!alunosRepository.existsById(alunoId)){
@@ -63,6 +66,7 @@ public class AlunosController {
     }
 
     @DeleteMapping("/{alunoId}")
+    @CacheEvict(value = "listaAlunos", allEntries = true)
     public ResponseEntity<Void> delete(@PathVariable Long alunoId){
 
         if(!alunosRepository.existsById(alunoId)){
